@@ -20,7 +20,7 @@ export default React.createClass({
             <div key={entry} className="entry">
               <h1>{entry}</h1>
               <div className="voteCount">
-                {this.getVotes(entry)}
+                &nbsp;{this.getVotes(entry)}
               </div>
             </div>
           ))}
