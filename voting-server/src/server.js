@@ -7,8 +7,19 @@ export default function startServer(store) {
   );
 
   io.on('connection', (socket) => {
+    store.dispatch({
+      type: 'ADD_CLIENT',
+      client: socket.id
+    })
     socket.emit('state', store.getState().toJS());
     socket.on('action', store.dispatch.bind(store));
+  });
+
+  io.on('disconnect', (socket) => {
+    store.dispatch({
+      type: 'REMOVE_CLIENT',
+      client: socket.id
+    });
   });
 
 }

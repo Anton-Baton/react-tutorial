@@ -36,6 +36,7 @@ describe('app logic', () => {
       const nextState = next(state);
 
       expect(nextState).to.equal(Map({
+        round: 1,
         vote: Map({
           pair: List.of('Trainspotting', '28 Days Later')
         }),
@@ -58,6 +59,7 @@ describe('app logic', () => {
       const nextState = next(state);
 
       expect(nextState).to.equal(Map({
+        round: 1,
         vote: Map({
           pair: List.of('Sunshine', 'Millions')
         }),
@@ -80,6 +82,7 @@ describe('app logic', () => {
       const nextState = next(state);
 
       expect(nextState).to.equal(Map({
+        round: 1,
         vote: Map({
           pair: List.of('Sunshine', 'Millions')
         }),
@@ -139,6 +142,25 @@ describe('app logic', () => {
         }),
       }));
     });
+
+    it('returns the same state for wrong entry', () => {
+      const state = Map({
+        pair: List.of('Trainspotting', '28 Days Later'),
+        tally: Map({
+          'Trainspotting': 3,
+          '28 Days Later': 2
+        })
+      });
+      const nextState = vote(state, 'Sunshine');
+      expect(nextState).to.equal(Map({
+        pair: List.of('Trainspotting', '28 Days Later'),
+        tally: Map({
+          'Trainspotting': 3,
+          '28 Days Later': 2
+        })
+      }));
+    });
+
   });
 
 });

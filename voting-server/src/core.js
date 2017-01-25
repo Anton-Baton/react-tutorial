@@ -1,6 +1,6 @@
 import {List, Map} from 'immutable';
 
-export const INITIAL_STATE = Map();
+export const INITIAL_STATE = Map({round: 0});
 
 export function setEntries(state, entries) {
   return state.set('entries', List(entries));
@@ -17,6 +17,11 @@ function getWinners(vote) {
   return [a, b];
 }
 
+function getNewRound(state){
+    const currentRound = state.get('round') || 0;
+    return currentRound + 1;
+}
+
 export function next(state) {
   const entries = state.get('entries').concat(getWinners(state.get('vote')));
   if (entries.size === 1){
@@ -26,14 +31,31 @@ export function next(state) {
   }
   return state.merge({
     vote: Map({pair: entries.take(2)}),
-    entries: entries.skip(2)
+    entries: entries.skip(2),
+    round: getNewRound(state)
   });
 }
 
 export function vote(voteState, entry) {
-  return voteState.updateIn(
-    ['tally', entry],
-    0,
-    tally => tally + 1
-  )
+  const currentPair = voteState.get('pair');
+  if (currentPair && currentPair.includes(entry)){
+    return voteState.updateIn(
+      ['tally', entry],
+      0,
+      tally => tally + 1
+    )
+  }
+  return voteState;
+
+}
+
+export function addClient(clients, client){
+  if (!(clients.includes(client))){
+    return clients.push(client);
+  }
+  return clients;
+}
+
+export function removeClient(clients, client){
+  return clients.filter(item => item !== client);
 }
